@@ -16,9 +16,6 @@ import java.util.*;
 
 import com.microsoft.z3.*;
 import com.tsnsched.core.network.NetworkProperties;
-import com.tsnsched.nest_sched.NestSchedINIGen;
-import com.tsnsched.nest_sched.NestSchedNEDGen;
-import com.tsnsched.nest_sched.NestSchedXMLGen;
 import com.tsnsched.core.components.Flow;
 import com.tsnsched.core.components.Port;
 import com.tsnsched.core.interface_manager.ParserManager;
@@ -384,11 +381,6 @@ public class ScheduleGenerator {
 	    	    	   this.printer.printIfLoggingIsEnabled("- Serializing network");
 	    	    	   this.serializeNetwork(net, "network.ser");
 	    	       }
-	       
-	    	       if(this.generateSimulationFiles) {
-	    	    	   this.printer.printIfLoggingIsEnabled("- Generating simulation files");
-	    	    	   generateSimulationFiles(net);			   
-	    		   }
 	    	       
 	    	       if(this.generateJSONOutput) {
 					   this.parserManager.setEnablePacketTimeOutput(this.enablePacketTimeOutput);
@@ -435,36 +427,6 @@ public class ScheduleGenerator {
 
 		   return successfullyScheduled;
 	   }
-	   
-	   
-	   /**
-	    * [Method]: generateSimulationFiles
-	    * [Usage]: Generate the XML, INI and NED files
-	    * needed to the Nesting simulation.
-	    * 
-	    * @param net		Network object to be serialized
-	    */
-	   public void generateSimulationFiles(Network net) {
-		 //Create the folder and the simulation files
-	       File folder = new File(System.getProperty("user.dir") + "/nestSched");
-	       if(!folder.exists()) {
-	    	   if(folder.mkdir()) {
-		    	   new NestSchedXMLGen(net);
-				   new NestSchedINIGen(net);
-				   new NestSchedNEDGen(net);
-	    	   }
-	       } else {
-	    	   String[]entries = folder.list();
-	    	   for(String s: entries){
-		           File currentFile = new File(folder.getPath(),s);
-		           currentFile.delete();
-		       }
-	    	   new NestSchedXMLGen(net);
-			   new NestSchedINIGen(net);
-			   new NestSchedNEDGen(net);
-	       }
-	   }
-
 
 	   /**
 	    * [Method]: serializateNetwork
